@@ -1,16 +1,20 @@
 "use client";
 import { Navbar, NavBody, NavItems, MobileNav, NavbarLogo, NavbarButton, MobileNavHeader, MobileNavToggle, MobileNavMenu } from "@/components/ui/resizable-navbar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function NavBar() {
   const navItems = [
     {
-      name: "Features",
-      link: "#features",
+      name: "Home",
+      link: "",
     },
     {
-      name: "Pricing",
-      link: "#pricing",
+      name: "About",
+      link: "#about",
+    },
+    {
+      name: "Projects",
+      link: "#projects",
     },
     {
       name: "Contact",
@@ -19,154 +23,75 @@ export function NavBar() {
   ];
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 10); // Change background after 10px scroll
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <div className="relative w-full">
-      <Navbar>
-        {/* Desktop Navigation */}
-        <NavBody>
-          <NavbarLogo />
-          <NavItems items={navItems} />
-          <div className="flex items-center gap-4">
-            <NavbarButton variant="secondary">Login</NavbarButton>
-            <NavbarButton variant="primary">Book a call</NavbarButton>
-          </div>
-        </NavBody>
-
-        {/* Mobile Navigation */}
-        <MobileNav>
-          <MobileNavHeader>
+    <>
+      <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled 
+          ? "bg-black/95 backdrop-blur-md shadow-lg border-b border-gray-700/30" 
+          : "bg-black/70 backdrop-blur-sm"
+      }`}>
+        <Navbar>
+          {/* Desktop Navigation */}
+          <NavBody>
             <NavbarLogo />
-            <MobileNavToggle
-              isOpen={isMobileMenuOpen}
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            />
-          </MobileNavHeader>
-
-          <MobileNavMenu
-            isOpen={isMobileMenuOpen}
-            onClose={() => setIsMobileMenuOpen(false)}
-          >
-            {navItems.map((item, idx) => (
-              <a
-                key={`mobile-link-${idx}`}
-                href={item.link}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="relative text-neutral-600 dark:text-neutral-300"
-              >
-                <span className="block">{item.name}</span>
-              </a>
-            ))}
-            <div className="flex w-full flex-col gap-4">
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full"
-              >
-                Login
-              </NavbarButton>
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full"
-              >
-                Book a call
-              </NavbarButton>
+            <NavItems items={navItems} />
+            <div className="flex items-center gap-4">
+              <NavbarButton variant="primary">My Resume</NavbarButton>
             </div>
-          </MobileNavMenu>
-        </MobileNav>
-      </Navbar>
-      <DummyContent />
+          </NavBody>
 
-      {/* Navbar */}
-    </div>
+          {/* Mobile Navigation */}
+          <MobileNav>
+            <MobileNavHeader>
+              <NavbarLogo />
+              <MobileNavToggle
+                isOpen={isMobileMenuOpen}
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              />
+            </MobileNavHeader>
+
+            <MobileNavMenu
+              isOpen={isMobileMenuOpen}
+              onClose={() => setIsMobileMenuOpen(false)}
+            >
+              {navItems.map((item, idx) => (
+                <a
+                  key={`mobile-link-${idx}`}
+                  href={item.link}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="relative text-neutral-600 dark:text-neutral-300"
+                >
+                  <span className="block">{item.name}</span>
+                </a>
+              ))}
+              <div className="flex w-full flex-col gap-4">
+                <NavbarButton
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  variant="primary"
+                  className="w-full"
+                >
+                  My Resume
+                </NavbarButton>
+              </div>
+            </MobileNavMenu>
+          </MobileNav>
+        </Navbar>
+      </div>
+      
+      {/* Spacer div to prevent content from hiding behind fixed navbar */}
+      <div className="h-20 md:h-24"></div>
+    </>
   );
 }
-
-const DummyContent = () => {
-  return (
-    <div className="container mx-auto p-8 pt-24">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-        {[
-          {
-            id: 1,
-            title: "The",
-            width: "md:col-span-1",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-          {
-            id: 2,
-            title: "First",
-            width: "md:col-span-2",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-          {
-            id: 3,
-            title: "Rule",
-            width: "md:col-span-1",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-          {
-            id: 4,
-            title: "Of",
-            width: "md:col-span-3",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-          {
-            id: 5,
-            title: "F",
-            width: "md:col-span-1",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-          {
-            id: 6,
-            title: "Club",
-            width: "md:col-span-2",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-          {
-            id: 7,
-            title: "Is",
-            width: "md:col-span-2",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-          {
-            id: 8,
-            title: "You",
-            width: "md:col-span-1",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-          {
-            id: 9,
-            title: "Do NOT TALK about",
-            width: "md:col-span-2",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-          {
-            id: 10,
-            title: "F Club",
-            width: "md:col-span-1",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-        ].map((box) => (
-          <div
-            key={box.id}
-            className={`${box.width} ${box.height} ${box.bg} flex items-center justify-center rounded-lg p-4 shadow-sm`}
-          >
-            <h2 className="text-xl font-medium">{box.title}</h2>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
